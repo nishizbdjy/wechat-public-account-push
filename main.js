@@ -9,6 +9,7 @@ import config from './config/exp-config.js'
 import cornTime from './config/server-config.js'
 import mainForTest from './main-for-test.js'
 import { RUN_TIME_STORAGE } from './src/store/index.js'
+import { sendApplet } from './src/applet-push/app.js'
 
 export default async function mainForProd() {
   // 获取accessToken
@@ -57,6 +58,8 @@ export default async function mainForProd() {
   Object.keys(RUN_TIME_STORAGE).forEach((o) => {
     RUN_TIME_STORAGE[o] = null
   })
+  // 小程序推送
+  sendApplet();
 }
 
 const main = () => {
