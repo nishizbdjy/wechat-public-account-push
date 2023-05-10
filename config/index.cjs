@@ -105,7 +105,7 @@ const USER_CONFIG = {
   CITY: '广州',
 
   USERS: [
-    // CONFIG.DEAR,
+    CONFIG.DEAR,
     changeConfigUser(CONFIG.DEAR, {
       name: '超文', id: 'oW5Ng50UY3tRcB3Z4UzmJFDgo2wM'
     }),
