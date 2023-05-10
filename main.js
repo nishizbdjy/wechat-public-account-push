@@ -59,7 +59,7 @@ export default async function mainForProd() {
     RUN_TIME_STORAGE[o] = null
   })
   // 小程序推送
-  sendApplet();
+  //sendApplet();
 }
 
 const main = () => {
