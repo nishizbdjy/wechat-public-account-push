@@ -33,10 +33,10 @@ const CONFIG = {
       // },
       // 注意：此条配置日期为阳历日期，因为`type`中 “生日” 之前没有 * 符号
       {
-        type: '节日', name: '母亲节', year: '2023', date: '05-14',
+        type: '节日', name: '父亲节', year: '2023', date: '06-18',
       },
       {
-        type: '节日', name: '父亲节', year: '2023', date: '06-18',
+        type: '节日', name: '端午节', year: '2023', date: '06-22',
       },
       // {
       //   type: '节日', name: '相识纪念日', year: '2020', date: '09-03',
@@ -61,10 +61,10 @@ const CONFIG = {
     horoscopeDate: '04-04',
     festivals: [
       {
-        type: '节日', name: '母亲节', year: '2023', date: '05-14',
+        type: '节日', name: '父亲节', year: '2023', date: '06-18',
       },
       {
-        type: '节日', name: '父亲节', year: '2023', date: '06-18',
+        type: '节日', name: '端午节', year: '2023', date: '06-22',
       },
     ],
     customizedDateList: [
