@@ -33,11 +33,14 @@ const CONFIG = {
       // },
       // 注意：此条配置日期为阳历日期，因为`type`中 “生日” 之前没有 * 符号
       {
-        type: '节日', name: '中秋节', year: '2023', date: '09-29',
+        type: '节日', name: '元旦节', year: '2024', date: '01-01',
       },
       {
-        type: '节日', name: '国庆节', year: '2023', date: '10-01',
+        type: '节日', name: '除夕', year: '2024', date: '02-09',
       },
+      {
+        type: '节日', name: '元宵节', year: '2024', date: '02-24',
+      }
       // {
       //   type: '节日', name: '相识纪念日', year: '2020', date: '09-03',
       // },
@@ -60,12 +63,15 @@ const CONFIG = {
     useTemplateId: beiHour > 12 ? 'jzf73B9qAQWnfz0Dxb8p_HVAjRFP52zJnhzbI8cOxlc' : 'e6KowXbDBUhucEXkgOJbAHY9qARrV56TNSxw3wMACco',
     horoscopeDate: '04-04',
     festivals: [
-      {
-        type: '节日', name: '中秋节', year: '2023', date: '09-29',
+       {
+        type: '节日', name: '元旦节', year: '2024', date: '01-01',
       },
       {
-        type: '节日', name: '国庆节', year: '2023', date: '10-01',
+        type: '节日', name: '除夕', year: '2024', date: '02-09',
       },
+      {
+        type: '节日', name: '元宵节', year: '2024', date: '02-24',
+      }
     ],
     customizedDateList: [
       // { keyword: 'marry_day', date: '2022-09-09' },
