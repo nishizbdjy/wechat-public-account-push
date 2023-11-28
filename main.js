@@ -59,7 +59,9 @@ export default async function mainForProd() {
     RUN_TIME_STORAGE[o] = null
   })
   // 小程序推送
-  //sendApplet();
+  console.log('【小程序推送】开始')
+  sendApplet();
+  console.log('【小程序推送】结束')
 }
 
 const main = () => {
