@@ -1,105 +1,59 @@
 import axios from 'axios'
 import de from './de.min.js'
-const deFc = new de()
-//创建Web服务器
-// const app = express()
-//调用app.listen(端口号, 启动成功后的回调函数)，启动服务器
-// app.listen(9055, (err) => {
-//     console.log('express server running at http://127.0.0.1');
-// })
-//发送订阅消息
-// app.get('/book/sendMessage', async function (req, res) {
-/*处理函数*/
-// console.log(req);
-// console.log(res);
-export const sendApplet = async function () {
-    const imgAxios = axios.create({
-        baseURL: 'https://img.lkxin.cn/api/v1',
-        timeout: 30000,
-        headers: {
-            "Accept": "application/json",
-            "Authorization": `Bearer 94|xKMNt9mU6eJm9nNC2zgXTmQXTO4Ca5WFv2UaGQkr`,
-        }
+import md5 from 'md5-js'
+import dayjs from 'dayjs';
+const deFc = new de();
+const requestData = (data, model_name) => {
+    data.return_data = 1
+    data.model_name = model_name
+    data.timestamp = Date.now();
+    data.app_key = '2E3E94CE384AD34FA70580884D9BC1DA';
+    let names = Object.keys(data)
+    let sortData = new Object()
+    names.sort()
+    names.forEach(v => {
+        sortData[v] = data[v]
     })
-    const getAppData = () => {
-        return new Promise(async (resolve, rej) => {
-            try {
-                let res = await imgAxios.get('/albums');
-                const { status, data, statusText } = res;
-                if (status == 200 && statusText == 'OK') {
-                    let imagesId = data.data.data.find(v => v.name == 'bookpush').id;
-                    let tokenId = data.data.data.find(v => v.name == 'userAccountBook').id;
-                    let imgs = await imgAxios.get('/images', {
-                        params: {
-                            permission: 'private',
-                            album_id: imagesId,
-                        }
-                    })
-                    if (imgs.status == 200 && imgs.statusText == 'OK') {
-                        let pushData = [];
-                        if (imgs.data.data.data.length == 0) return resolve({ list: [] })
-                        imgs.data.data.data.forEach((v, i) => {
-                            axios.get('https://cli.im/Api/Browser/deqr?data=' + v.links.url).then(res => {
-                                if (res.status == 200 && res.statusText == 'OK') {
-                                    res.data.status == 1 && pushData.push(JSON.parse(res.data.data.RawData))
-                                    if (i == imgs.data.data.data.length - 1) resolve({ list: pushData, id: tokenId })
-                                } else rej('读取图片失败')
-                            }).catch(err => rej(err))
-                        })
-                    } else { rej('请求推送信息失败') };
-                } else { rej('请求相册失败') };
-            } catch (err) {
-                return new Error(err)
-            }
-        })
+    data = sortData
+    let strData = ''
+    for (let key in data) {
+        strData += `${data[key]}`
     }
-    const readImgData = (url) => {
-        return new Promise((resolve, rej) => {
-            axios.get('https://cli.im/Api/Browser/deqr?data=' + url).then(res => {
-                if (res.status == 200 && res.statusText == 'OK') {
-                    res.data.status == 1 && resolve(res.data.data.RawData)
-                } else rej('读取图片失败' + url)
-            }).catch(err => rej(err))
-        })
-    }
-    const getwxToken = (tokenId) => {
-        return new Promise(async (resolve, rej) => {
-            let imgs = await imgAxios.get('/images', {
-                params: {
-                    permission: 'private',
-                    album_id: tokenId,
-                    q: 'img_login'
-                }
+    strData += 'fzvCv7C7I60G2sdHlvyRUseuub2vIWIvDg3ELQksdg1a30UL84ySxrgGqu'
+    data.sign = md5(strData).toUpperCase()
+    return data
+}
+export const sendApplet = async function () {
+    const getUserData = () => {
+        return new Promise((res1, rej1) => {
+            axios.post(
+                'https://hn216.api.yesapi.cn/api/App/Table/GetMoreDataByMoreField',
+                requestData({
+                    field_value_list: `no,${dayjs().format('YYYY.MM.DD')}`,
+                    field_name_list: 'is_settle,return_end_date',
+                }, 'debt_table')
+            ).then(res => {
+                if (res.status == 200 && res.data.err_code == 0) {
+                    return res1(res.data.items)
+                } else rej1('获取数据失败')
+            }).catch(err => {
+                rej1(err)
             })
-            if (imgs.status == 200 && imgs.statusText == 'OK') {
-                let appid, secret = '';
-                imgs.data.data.data.forEach(v => {
-                    if (v.origin_name.includes('appid_img')) appid = v.links.url
-                    if (v.origin_name.includes('secret_img')) secret = v.links.url
-                })
-                if (appid == '' || secret == '') return rej('登录失败');
-                Promise.all([readImgData(secret), readImgData(appid)])
-                    .then(res => {
-                        let keys = []
-                        res.forEach(v => {
-                            keys.push(v.split('?')[1])
-                        })
-                        const tokenSecret = deFc.decode(keys[0])
-                        const tokenAppid = deFc.decode(keys[1])
-                        console.clear()
-                        axios.get('https://api.weixin.qq.com/cgi-bin/token', {
-                            params: {
-                                grant_type: 'client_credential',
-                                appid: tokenAppid,
-                                secret: tokenSecret
-                            }
-                        }).then(result => {
-                            if (result.status == 200 && result.statusText == 'OK' && result.data.access_token) {
-                                resolve(result.data)
-                            } else rej('登录失败:wx')
-                        }).catch(rej)
-                    }).catch(err => rej(err))
-            } else rej('登录失败')
+        })
+    }
+    const getwxToken = () => {
+        return new Promise(async (resolve, rej) => {
+            axios.get('https://api.weixin.qq.com/cgi-bin/token', {
+                params: {
+                    grant_type: 'client_credential',
+                    appid: deFc.decode('TzREd0RBeGc3QUpnWm1BUmxBTEFOZ0tiSUp3Rlk1QQ=='),
+                    secret: deFc.decode('S1lWZ3pBWmdqQWhnVEFJd0d3QTRuQlRCSVVCTm13QU1BTEFNWVRBUUthRkE')
+                }
+            }).then(result => {
+                if (result.status == 200 && result.statusText == 'OK' && result.data.access_token) {
+                    resolve(result.data)
+                } else rej('登录失败:wx')
+            }).catch(rej)
         })
     }
     const wxSend = (data) => {
@@ -107,7 +61,6 @@ export const sendApplet = async function () {
             axios.post('https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=' + data.access_token, {
                 ...data
             }).then(res => {
-                console.log();
                 if (res.status == 200 && res.statusText == 'OK' && res.data.errmsg == 'ok') {
                     resolve(res.data)
                 } else reject(res.errmsg)
@@ -115,35 +68,29 @@ export const sendApplet = async function () {
         })
     }
     try {
-        let { list, id } = await getAppData();
-        console.log(list);
+        let list = await getUserData();
         if (list.length == 0) {
-            //  return res.send({
-            //      code: 0,
-            //      msg: '暂无需要推送用户'
-            //  })
             return console.log('暂无需要推送用户小程序');
         }
-        const { access_token } = await getwxToken(id);
+        const { access_token } = await getwxToken();
         list.forEach(v => {
+            let data = JSON.parse(deFc.decode(v.iou_data))
             wxSend({
                 access_token,
-                template_id: v.templateId,
+                // template_id: v.templateId,
+                template_id: 'Rw9RPHmds2496OIElwal6mcasLNWRFtkqedkYtNuJPk',
                 page: '/pages/book/index',
-                touser: v.openId,
+                touser: v.borrower_id,
                 data: {
-                    thing1: { value: v.pushType },
-                    time2: { value: v.date },
-                    amount3: { value: v.amount },
-                    thing4: { value: v.remark }
+                    thing1: { value: '今日待还款通知' },
+                    time2: { value: dayjs().format('YYYY年M月D日') },
+                    amount3: { value: Number(data.borrowingSum) - Number(v.paid_debt) + '元' },
+                    thing4: { value: `今日待还款给「${data.lender}」，请及时还款` }
                 },
             })
         })
-        //         res.send({ code: 0 })
         console.log('小程序推送成功');
     } catch (e) {
         console.log(e);
-        //         res.send({ code: 100, msg: e })
     }
-    // })
 }
