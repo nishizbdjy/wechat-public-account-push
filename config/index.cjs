@@ -9,6 +9,17 @@ const dayjs = require('dayjs')
 const utc = require('dayjs/plugin/utc')
 dayjs.extend(utc)
 const beiHour = dayjs.utc().add(8, 'hour').hour()
+const festivals = [
+  {
+    type: '节日', name: '清明节', year: '2024', date: '04-04',
+  },
+  {
+    type: '节日', name: '劳动节', year: '2024', date: '05-01',
+  },
+  {
+    type: '节日', name: '母亲节', year: '2024', date: '05-12',
+  }
+]
 const CONFIG = {
   DEAR: {
     // 想要发送的人的名字
@@ -32,15 +43,7 @@ const CONFIG = {
       //   type: '*生日', name: '超文', year: '2001', date: '09-18',
       // },
       // 注意：此条配置日期为阳历日期，因为`type`中 “生日” 之前没有 * 符号
-      {
-        type: '节日', name: '元旦节', year: '2024', date: '01-01',
-      },
-      {
-        type: '节日', name: '除夕', year: '2024', date: '02-09',
-      },
-      {
-        type: '节日', name: '元宵节', year: '2024', date: '02-24',
-      }
+      ...festivals
       // {
       //   type: '节日', name: '相识纪念日', year: '2020', date: '09-03',
       // },
@@ -62,17 +65,7 @@ const CONFIG = {
     id: 'oW5Ng53KEU-wGMBHZ8P86UYG1zKE',
     useTemplateId: beiHour > 12 ? 'jzf73B9qAQWnfz0Dxb8p_HVAjRFP52zJnhzbI8cOxlc' : 'e6KowXbDBUhucEXkgOJbAHY9qARrV56TNSxw3wMACco',
     horoscopeDate: '04-04',
-    festivals: [
-       {
-        type: '节日', name: '元旦节', year: '2024', date: '01-01',
-      },
-      {
-        type: '节日', name: '除夕', year: '2024', date: '02-09',
-      },
-      {
-        type: '节日', name: '元宵节', year: '2024', date: '02-24',
-      }
-    ],
+    festivals: festivals,
     customizedDateList: [
       // { keyword: 'marry_day', date: '2022-09-09' },
     ],
