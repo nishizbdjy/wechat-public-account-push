@@ -11,13 +11,13 @@ dayjs.extend(utc)
 const beiHour = dayjs.utc().add(8, 'hour').hour()
 const festivals = [
   {
-    type: '节日', name: '清明节', year: '2024', date: '04-04',
+    type: '节日', name: '中秋节', year: '2024', date: '09-17',
   },
   {
-    type: '节日', name: '劳动节', year: '2024', date: '05-01',
+    type: '节日', name: '国庆节', year: '2024', date: '10-01',
   },
   {
-    type: '节日', name: '母亲节', year: '2024', date: '05-12',
+    type: '生日', name: '超文', year: '2024', date: '10-20',
   }
 ]
 const CONFIG = {
